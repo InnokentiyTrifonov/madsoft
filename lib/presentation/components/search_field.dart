@@ -4,14 +4,18 @@ import 'package:flutter_svg/svg.dart';
 class SearchField extends StatelessWidget {
   const SearchField({
     super.key,
+    required this.controller,
     required this.onChanged,
   });
+
+  final TextEditingController controller;
 
   final Function(String) onChanged;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       onChanged: onChanged,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),

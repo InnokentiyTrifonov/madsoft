@@ -17,6 +17,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final controller = TextEditingController();
   List<TableModel> data = [];
 
   int curIndex = 0;
@@ -27,6 +28,12 @@ class _HomePageState extends State<HomePage> {
     if (BlocProvider.of<RemoteRepositoryBloc>(context).state is RemoteRepositoryLoaded) {
       data = (BlocProvider.of<RemoteRepositoryBloc>(context).state as RemoteRepositoryLoaded).data;
     }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
   }
 
   @override
@@ -52,6 +59,7 @@ class _HomePageState extends State<HomePage> {
                           child: constraints.biggest.height <= MediaQuery.of(context).size.height * 0.15
                               ? const CollapsedAppBar()
                               : ExpandedAppBar(
+                                  controller: controller,
                                   onChanged: (String value) {
                                     setState(() {
                                       data = state.data
@@ -142,6 +150,9 @@ class _HomePageState extends State<HomePage> {
                       childCount: data.length,
                     ),
                   ),
+                  const SliverToBoxAdapter(
+                    child: SizedBox(height: 20),
+                  )
                 ],
               );
 
@@ -212,7 +223,9 @@ class ExpandedAppBar extends StatelessWidget {
   const ExpandedAppBar({
     super.key,
     required this.onChanged,
+    required this.controller,
   });
+  final TextEditingController controller;
   final Function(String) onChanged;
 
   @override
@@ -237,6 +250,7 @@ class ExpandedAppBar extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               SearchField(
+                controller: controller,
                 onChanged: onChanged,
               )
             ],
